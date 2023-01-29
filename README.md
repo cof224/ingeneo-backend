@@ -9,7 +9,7 @@ concursante : Cristian Fuentes
 * framework: spring boot version 2.7.8
 * Base de datos: PostgreSQL
 * documentacion de los  endpoint : swagger 3.0
-* despliegue: railway url: https://prodomain/
+* despliegue: railway url: https://ingeneo-backend-production.up.railway.app/
 
 #### Listado de EndPoint's
 #### para todos los endpoints es necesario una autenticacion full, exceptuando los metodos de listas
@@ -43,7 +43,7 @@ PROD_DB_USERNAME=postgres
 
 Ejemplo de Autenticación de Usuarios:
 
-curl --location --request POST 'https://prodomain/api/auth/login' \
+curl --location --request POST 'https://ingeneo-backend-production.up.railway.app/api/auth/login' \
 --header 'Content-Type: application/json' \
 --data-raw '{
 "username":"admin",
@@ -52,7 +52,7 @@ curl --location --request POST 'https://prodomain/api/auth/login' \
 
 Ejemplo de uso de token para la creación :
 
-curl --location --request POST 'https://prodomain/crud/customer/' \
+curl --location --request POST 'https://ingeneo-backend-production.up.railway.app/crud/customer/' \
 --header 'Authorization: Bearer token' \
 --header 'Content-Type: application/json' \
 --data-raw '{
