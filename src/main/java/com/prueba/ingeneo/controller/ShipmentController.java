@@ -1,5 +1,7 @@
 package com.prueba.ingeneo.controller;
 
+import com.prueba.ingeneo.dto.ShipmentDto;
+import com.prueba.ingeneo.dto.ShipmentMapper;
 import com.prueba.ingeneo.exception.ResourceNotFoundException;
 import com.prueba.ingeneo.payload.request.ShipmentRequest;
 import com.prueba.ingeneo.security.models.Customer;
@@ -43,7 +45,6 @@ public class ShipmentController {
     ServiceRepository serviceRepository;
     @Autowired
     CustomerRepository customerRepository;
-
     /*
      * Agregar un shipment y aplicar descuentos si aplica
      */
@@ -92,7 +93,7 @@ public class ShipmentController {
                 if(shipment.getService().getId()==1){
                 	shipment.setDiscount(new BigDecimal("0.05"));
                 }else{
-                	shipment.setDiscount(new BigDecimal("0.05"));
+                	shipment.setDiscount(new BigDecimal("0.03"));
                 }
                 
                 shipment.setTotal(shipment.getProduct().getPrice().multiply(new BigDecimal(shipment.getQuantity())));
@@ -129,7 +130,7 @@ public class ShipmentController {
         	cliente = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encuentra cliente con el identificador = " + id));
         }
         
-        shipments = shipmentRepository.findByCustomerId(cliente);
+        shipments =(List<Shipment>) cliente.getShipments();
        
         if (shipments.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -138,9 +139,41 @@ public class ShipmentController {
         return new ResponseEntity<>(shipments, HttpStatus.OK);
     }
     
+    @GetMapping("/all")
+    public ResponseEntity<List<ShipmentDto>> getAll() {
+        List<Shipment> envios = new ArrayList<Shipment>();
+        List<ShipmentDto> enviosDto = new ArrayList<ShipmentDto>();
+        shipmentRepository.findAll().forEach(envios::add);
+        
+        for(Shipment s:envios) {
+        	ShipmentDto shipment=new ShipmentDto(); 
+        	shipment.setId(s.getId());
+        	shipment.setCustomer(s.getCustomer().getId());
+        	shipment.setNameCustomer(s.getCustomer().getName());
+        	shipment.setTotal(s.getTotal());
+        	shipment.setDiscount(s.getDiscount());
+        	shipment.setProduct(s.getProduct().getId());
+        	shipment.setNameproducto(s.getProduct().getName());
+        	shipment.setQuantity(s.getQuantity());
+        	shipment.setEnabled(s.getEnabled());
+        	shipment.setTrackingNumber(s.getTrackingNumber());
+        	shipment.setTransportNumber(s.getTransportNumber());
+        	shipment.setCreatedDate(s.getCreatedDate());
+        	shipment.setShipmentDate(s.getShipmentDate());
+        	enviosDto.add(shipment);
+        }
+        
+        if (envios.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        
+        return new ResponseEntity<>(enviosDto, HttpStatus.OK);
+    }
+
+    
     /**
      * verificar si la peticion de envio es valido.
-     * @param d
+     * @param peticionDeEnvio
      * @return
      */
     public Boolean isValid (ShipmentRequest peticionDeEnvio){

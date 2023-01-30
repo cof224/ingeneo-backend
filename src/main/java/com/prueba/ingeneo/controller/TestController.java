@@ -13,7 +13,7 @@ public class TestController {
   
   @GetMapping("/all")
   public String allAccess() {
-    return "Public Content.";
+    return "Bienvenidos";
   }
 
   @GetMapping("/user")

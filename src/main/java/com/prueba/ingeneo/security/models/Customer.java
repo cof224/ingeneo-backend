@@ -1,7 +1,9 @@
 package com.prueba.ingeneo.security.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -53,7 +55,7 @@ public class Customer {
     private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Shipment> shipments = new LinkedHashSet<>();
+    private List<Shipment> shipments = new ArrayList();
 
     
     public Customer() {
@@ -142,12 +144,12 @@ public class Customer {
 	}
 
 
-	public Set<Shipment> getShipments() {
+	public List<Shipment> getShipments() {
 		return shipments;
 	}
 
 
-	public void setShipments(Set<Shipment> shipments) {
+	public void setShipments(List<Shipment> shipments) {
 		this.shipments = shipments;
 	}
 
